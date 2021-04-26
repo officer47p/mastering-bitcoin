@@ -28,15 +28,17 @@ def create_private_key_from_passphrase(passphrase):
 def create_public_key_from_private_key(priv_key, compressed=False):
     priv_key_as_int = int(priv_key, 16)
     pubkey_point = priv_key_as_int * generator_secp256k1
+    point_x = pubkey_point.x()
+    point_y = pubkey_point.y()
     if(compressed):
-        if(pubkey_point.y() % 2 == 0):
+        if(point_y % 2 == 0):
             prefix = "02"
         else:
             prefix = "03"
-        public_key_hex = prefix + hex(pubkey_point.x())[2:]
+        public_key_hex = prefix + hex(point_x)[2:]
         return public_key_hex
     else:
-        public_key_hex = "04" + hex(pubkey_point.x())[2:] + hex(pubkey_point.y())[2:]
+        public_key_hex = "04" + hex(point_x)[2:] + hex(point_y)[2:]
         return public_key_hex
 
 def create_public_key_hash(pub_key):
